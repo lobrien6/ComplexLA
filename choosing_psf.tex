@@ -1,0 +1,70 @@
+%\documentclass{article}
+\documentclass[twocolumn]{desc-tex/styles/lsstdescnote}
+\usepackage{desc-tex/styles/lsstdesc_macros}
+\usepackage[utf8]{inputenc}
+\usepackage{array}
+%\usepackage{natbib}
+%\bibliographystyle{plainnat}
+\usepackage{graphicx}
+\graphicspath{images/}
+\usepackage[utf8]{inputenc}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{appendix}
+\usepackage{enumerate}
+
+\definecolor{custom_gray}{gray}{0.92}
+% TURN THIS ON AND OFF WHILE WORKING
+%\pagecolor{custom_gray}
+
+\begin{document}
+
+\title{HST WFC3 PSF for Simulation of Realistic Strong Lenses}
+
+\maketitle
+
+\section{Introduction}
+
+We are developing a deep learning method for modeling strongly lensed quasars. We train a deep neural network to learn lens mass model parameters. Since there are currently few lenses available, the only way to train the network is using simulated images. When testing our method on real data, we must take care that the training set simulation is as realistic as possible.
+
+Since we are modeling quasar lenses, we must take care that our simulation of point sources is very accurate. As evidenced by systematics studies in \cite{TDCOSMOSIX}, the point spread function (PSF) is incredibly important when modeling point sources. In forward modeling, there is a degeneracy between source structure and PSF, so it can be hard to know whether the forward model has reached the true solution. With the machine learning approach, we can marginalize over the PSF. In this way, our method is more robust. We don't need to model the PSF to high precision/accuracy for each individual lens, but we do need to make sure that the range of PSFs our model knows about is realistic. 
+
+So, we must make sure to use a wide enough range of realistic PSFs that cover what's actually seen in the data. In this case, our data is a set of lenses imaged by Hubble's WFC3 in UVIS filter F814W. We need a PSF generator for this configuration. This PSF can vary for the same instrument due to several factors: color/SED dependence, focus, CCD location.
+
+What have other projects done? 
+\hfill \break
+\hfill \break
+- HOLISMOKES collaboration is working on simulating large training sets for ground based HSC images. In their simulation, "the lensed source image with high resolution is convolved with the subsampled PSF of the lens, which is provided by HSC SSP PDR2 for each image separately." \citep{schuldt2021holismokes}. So, it seems the PSF is provided by HSC. 
+
+\noindent - \cite{bate_18} detail their method for modeling the PSF: "TinyTim (Krist, Hook & Stoehr 2011) was used to generate WFC3 PSFs, and StarFit (Timothy Hamilton, private communication) was used to propagate these PSFs through the dither-combine pipeline to match the final combined PSFs."
+
+\hfill \break
+We investigate several options for defining the PSF, including: provided empirical PSFs from the STSCI website, TINY TIM WFC3 simulations, foreground star fitting, MAST archive search tool for PSFs. Each section is dedicated to the investigation of a single approach. 
+
+\section{Empirical PSFs from STSCI}
+
+STSCI provides a set of "focus-diverse WFC3/UVIS PSFs" for public use: \cite{stsci_psfs}. We tried to use these PSFs as basis to construct PSFs for the training set. 
+
+\section{TINY TIM}
+
+Note the findings from \cite{Gillis_2020}, "TINY TIM’s models, in the default configuration, differ significantly from the observed PSFs, most notably in their sizes". They suggest a modified approach, showing that the "quality of Tiny Tim PSFs can be improved through fitting the full set of Zernike polynomial coefficients which characterise the optics."
+
+\section{Foreground PSF Fitting}
+
+\section{MAST Archive PSF Search Tool}
+
+STScI maintains an archive of WFC3 PSFs \citep{mast_tool}. There is an advanced search tool to comb through the archive and find relevant PSFs. A screenshot of the advanced search tool is included in Figure \ref{fig:mast_tool}.
+
+\begin{figure}[hbt!]
+  \centering
+  \subfloat{\includegraphics[width=0.65\textwidth]{images/MAST_search1.png}\label{fig:f1}}
+  \hfill
+  \subfloat{\includegraphics[width=0.65\textwidth]{images/MAST_search2.png}\label{fig:f2}}
+  \caption{Criteria used in advanced search for WFC3 PSF in MAST archive}
+  \label{fig:mast_tool}
+\end{figure}
+
+We can use this search tool as a clue to what factors we should consider when creating a PSF generator. It seems that focus, X/Y location, PSF flux, exposure time, aperture, and chip are important factors. 
+
+\bibliography{main}
+
+\end{document}
