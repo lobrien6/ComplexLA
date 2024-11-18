@@ -10,7 +10,7 @@ from lenstronomy.Util import kernel_util
 
 psf_fits_file = '/Users/Logan/AppData/Local/Programs/Python/Python312/Lib/site-packages/paltas/datasets/hst_psf/STDPBF_WFC3UV_F814W.fits'
 
-def perturberparameters(sample_num):
+def perturberparameters(sample_num,module_path):
     # load in focus diverse PSF maps
     with fits.open(psf_fits_file) as hdu:
         psf_kernels = hdu[0].data
@@ -26,7 +26,7 @@ def perturberparameters(sample_num):
     weights = np.random.uniform(size=np.shape(normalized_psfs)[0])
     weights /= np.sum(weights)
     weighted_sum = np.sum(weights.reshape(len(weights),1,1) * normalized_psfs,axis=0)
-    np.save('Files/weighted_sum.npy', weighted_sum)
+    np.save(module_path+'/Files/weighted_sum.npy', weighted_sum)
 
     #Defining parameters
     full_dict = []

@@ -17,4 +17,12 @@ def PaltasModelWPL(path):
     test_sample_i = ConfigHandler(path+'Configs/perturber_sample_wpl_config.py')
     im,metadata = test_sample_i.draw_image(new_sample=False)
 
+def PaltasModelWoS(path):
+    test_sample_i = ConfigHandler(path+'Configs/substructure_WoS_config.py')
+    im,metadata = test_sample_i.draw_image(new_sample=False)
+
+def PaltasModelWS(path):
+    test_sample_i = ConfigHandler(path+'Configs/substructure_WS_config.py')
+    im,metadata = test_sample_i.draw_image(new_sample=False)
+    
     return im,metadata
