@@ -2,6 +2,23 @@ import numpy as np
 from statistics import median
 
 def PerturberSample(sample_num, y_test, y_pred_wop, y_pred_wp, y_pred_wpl, std_pred_wop, std_pred_wp, std_pred_wpl):
+    """ Calculuate the median error, median absolute error, and the median standard deviation for the Wop, WP, and WPL cases.
+
+    Parameters
+    ----------
+    sample_num : int
+        Number of mock sample lenses.
+    y_test : np.array
+        Known values of the lens parameters.
+    y_pred_wop, y_pred_wp, y_pred_wpl : np.array
+        Predicted values of the lens parameters for the wop, wp, and wpl cases.
+    std_pred_wop, std_pred_wp, std_pred_wpl : np.array
+        Standard deviations of the lens parameter predicted distributions.
+
+    Returns
+    -------
+
+    """
 
     ##ME - Median Error
     param_diff=[]

@@ -11,6 +11,21 @@ from lenstronomy.Util import kernel_util
 psf_fits_file = '/Users/Logan/AppData/Local/Programs/Python/Python312/Lib/site-packages/paltas/datasets/hst_psf/STDPBF_WFC3UV_F814W.fits'
 
 def perturberparameters(sample_num,module_path):
+    """ Generates all of the needed paramaters for each lens
+
+    Parameters
+    ----------
+    sample_num : int
+        Number of mock sample lenses.
+    module_path : str
+        File path for the main directory.
+
+    Returns
+    -------
+    full_dict : array
+        Array of values for each paramter.
+
+    """
     # load in focus diverse PSF maps
     with fits.open(psf_fits_file) as hdu:
         psf_kernels = hdu[0].data
@@ -30,6 +45,7 @@ def perturberparameters(sample_num,module_path):
 
     #Defining parameters
     full_dict = []
+    n = int(0)
     for i in range(sample_num):
         cross_object_1 = dist.DuplicateScatter(dist=norm(loc=0,scale=0.07).rvs,scatter=0.005)()
         cross_object_2 = dist.DuplicateScatter(dist=norm(loc=0,scale=0.07).rvs,scatter=0.005)()
@@ -39,6 +55,7 @@ def perturberparameters(sample_num,module_path):
     		z_source_min=0,z_source_mean=2,z_source_std=0.4)()
 
         param_dict = {
+        'index': n,
     	'z_lens': cross_object_4[0],
     	'gamma_md': truncnorm(-(2.05/.1),np.inf,loc=2.05,scale=0.1).rvs(),
     	'theta_E_md': truncnorm(-(.7/.08),np.inf,loc=0.7,scale=0.08).rvs(),
@@ -70,6 +87,7 @@ def perturberparameters(sample_num,module_path):
     	'mag_app_point_source': truncnorm(-3./2.,3./2.,loc=22.,scale=2.).rvs(),
     	#'mag_pert': dist.MultipleValues(dist=truncnorm(-1/0.3,np.inf,1,0.3).rvs,num=10)(),
         } 
-        
+
+        n = n+1
         full_dict.append(list(param_dict.values()))
     return full_dict

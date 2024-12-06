@@ -1,22 +1,32 @@
 import os
 from deep_lens_modeling import network_predictions
 
-def test(path):
-    return os.listdir(path)
-
 def Predictions(sample_num, path, config_path, image_path):
-    # Generates network predictions from images
-    # Args:
-        # sample_num - number of mock sample lenses
-        # path - main notebook path
-        # config_path - file path of the config files for the wop, wp, and wpl cases
-        # image_path - file path of the image files for the wop, wp, and wpl cases
+    """ Generates network predictions from images for the wop, wp, and wpl cases
+    
+    Parameters
+    ----------
+    sample_num : int
+        Number of mock sample lenses.
+    path : str
+        Main notebook path.
+    config_path : str
+        File path of the config files for the wop, wp, and wpl cases.
+    image_path : str
+        File path of the image files for the wop, wp, and wpl cases.
 
-    #Returns:
-        # y_test_wop - Truth values of lens parameters
-        # y_pred_wop, y_pred_wp, y_pred_wpl - Prediction values for the wop, wp, and wpl cases
-        # std_pred_wop, std_pred_wp, std_pred_wpl - Standard deviation of the prediction values for the wop, wp and wpl cases
-        # prec_pred_wop, prec_pred_wp, prec_pred_wpl - 
+    Returns
+    -------
+    y_test_wop : float
+        Truth values of lens parameters.
+    y_pred_wop, y_pred_wp, y_pred_wpl : float
+        Prediction values for the wop, wp, and wpl cases.
+    std_pred_wop, std_pred_wp, std_pred_wpl : float
+        Standard deviation of the prediction values for the wop, wp and wpl cases.
+    prec_pred_wop, prec_pred_wp, prec_pred_wpl : array
+        Predicted precision matrix for the wop, wp and wpl cases.
+
+    """
 
     #Assigning paths to variables
     config_file_wop = path+config_path+'/perturber_sample_wop_config.py'
