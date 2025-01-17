@@ -201,7 +201,19 @@ class fermat:
         sampled_fermat_potentials_wp = np.asarray(sampled_fermat_potentials_wp)
         sampled_fermat_potentials_wpl = np.asarray(sampled_fermat_potentials_wpl)
 
-        return(sampled_fermat_potentials_wop,sampled_fermat_potentials_wp,sampled_fermat_potentials_wpl)
+    def fermat_potential_arrays_substructure(params_dist_WoS,params_dist_WS,y_test,x_im_test,y_im_test):
+        sampled_fermat_potentials_WoS = []
+        sampled_fermat_potentials_WS = []
+        
+        for lens_params in params_dist_WoS:
+            sampled_fermat_potentials_WoS.append(fermat.fermat_potential_at_image_positions(lens_params, x_im_test, y_im_test))
+        for lens_params in params_dist_WS:
+            sampled_fermat_potentials_WS.append(fermat.fermat_potential_at_image_positions(lens_params, x_im_test, y_im_test))
+    
+        sampled_fermat_potentials_WoS = np.asarray(sampled_fermat_potentials_WoS)
+        sampled_fermat_potentials_WS = np.asarray(sampled_fermat_potentials_WS)
+
+        return(sampled_fermat_potentials_WoS,sampled_fermat_potentials_WS)
 
     def largest_truth_value(shape,params_dist_wop,params_dist_wp,params_dist_wpl,y_test,x_im_test,y_im_test,truth_fermat_potentials):
         truth_arr = []
@@ -224,3 +236,21 @@ class fermat:
         abs_max_loc = int(abs_max_loc[0])
 
         return(sample_wop_arr,sample_wp_arr,sample_wpl_arr,truth_arr,abs_max_loc)
+    def largest_truth_value_substructure(shape,params_dist_WoS,params_dist_WS,y_test,x_im_test,y_im_test,truth_fermat_potentials):
+        truth_arr = []
+        sample_WoS_arr = []
+        sample_WS_arr = []
+        sampled_fermat_potentials_WoS,sampled_fermat_potentials_WS = fermat.fermat_potential_arrays_substructure(
+            params_dist_WoS,params_dist_WS,y_test,x_im_test,y_im_test)
+        
+        for j in range(0,shape):
+            truth_arr.append(truth_fermat_potentials[0]-truth_fermat_potentials[j+1])
+            sample_WoS_arr.append(sampled_fermat_potentials_WoS[:,0]-sampled_fermat_potentials_WoS[:,j+1])
+            sample_WS_arr.append(sampled_fermat_potentials_WS[:,0]-sampled_fermat_potentials_WS[:,j+1])
+            
+        truth_arr = np.array(truth_arr)
+        abs_max = max(max(truth_arr), min(truth_arr), key=abs)
+        abs_max_loc =  np.where(truth_arr==abs_max)
+        abs_max_loc = int(abs_max_loc[0])
+
+        return(sample_WoS_arr,sample_WS_arr,truth_arr,abs_max_loc)
