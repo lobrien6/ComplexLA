@@ -119,7 +119,7 @@ def PaltasModelWS(path,sample_num):
     im_list = []
     metadata_list = []
     #while n<sample_num:
-    for i in range(0,100):
+    for i in range(0,sample_num-1):
         im,metadata = test_sample_i.draw_image(new_sample=True)
         im_list.append(im)
         metadata_list.append(metadata)

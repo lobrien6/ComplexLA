@@ -83,8 +83,8 @@ def Predictions_Substructure(sample_num, path, config_path, image_path):
 
     Returns
     -------
-    y_test_WoS : float
-        Truth values of lens parameters.
+    y_test_WoS, y_test_WS : float
+        Truth values of lens parameters for the WoS and WS cases.
     y_pred_WoS, y_pred_WS : float
         Prediction values for the WoS, and WS cases.
     std_pred_WoS, std_pred_WS : float
@@ -105,7 +105,7 @@ def Predictions_Substructure(sample_num, path, config_path, image_path):
     os.system(f'python /Users/Logan/AppData/Local/Programs/Python/Python312/Lib/site-packages/paltas/paltas/generate.py {config_file_WoS} {image_folder_WoS} --n {sample_num-1} --tf_record')
     os.system(f'python /Users/Logan/AppData/Local/Programs/Python/Python312/Lib/site-packages/paltas/paltas/generate.py {config_file_WS} {image_folder_WS} --n {sample_num-1} --tf_record')
     
-    assert os.path.exists(os.path.join(image_folder_WoS, 'data.tfrecord'))
+    #assert os.path.exists(os.path.join(image_folder_WoS, 'data.tfrecord'))
 
     # Compute predictions for test sets
     path_to_weights = path+'/files/xresnet34_068--14.58.h5'
@@ -126,4 +126,4 @@ def Predictions_Substructure(sample_num, path, config_path, image_path):
     y_test_WoS, y_pred_WoS, std_pred_WoS, prec_pred_WoS = model_predictions.gen_network_predictions(test_folder=image_folder_WoS)
     y_test_WS, y_pred_WS, std_pred_WS, prec_pred_WS = model_predictions.gen_network_predictions(test_folder=image_folder_WS)
 
-    return y_test_WoS, y_pred_WoS, std_pred_WoS, prec_pred_WoS, y_pred_WS, std_pred_WS, prec_pred_WS
+    return y_test_WoS, y_pred_WoS, std_pred_WoS, prec_pred_WoS, y_test_WS, y_pred_WS, std_pred_WS, prec_pred_WS

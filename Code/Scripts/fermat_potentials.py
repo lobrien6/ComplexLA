@@ -18,6 +18,7 @@ kwargs_model = dict(
     cosmo=FlatLambdaCDM(H0=70.0, Om0=0.3)
     )
 lens_model = LensModel(['EPL', 'SHEAR'])
+print('lens model: ', lens_model)
 td_cosmo = TDCosmography(0.5, 2., kwargs_model, cosmo_fiducial=FlatLambdaCDM(H0=70.0, Om0=0.3))
 
 class fermat:
@@ -171,9 +172,10 @@ class fermat:
             fig2.colorbar(im4,ax=axs2[i,2])
     
     def image_positions_from_y_pred(y_pred):
-        #theta_x = []
-        #theta_y = []
-        #for arr in y_pred:
+        #if structure == 'WoS':
+         #   lens_model = lens_model_WoS
+        #elif structure == 'WS':
+         #   lens_model =  lens_model_WS
         solver = LensEquationSolver(lens_model)
         kwargs_lens = fermat.kwargs_lens_from_y_pred(y_pred)
         theta_x, theta_y = solver.image_position_from_source(y_pred[8], y_pred[9], kwargs_lens)
@@ -201,14 +203,14 @@ class fermat:
         sampled_fermat_potentials_wp = np.asarray(sampled_fermat_potentials_wp)
         sampled_fermat_potentials_wpl = np.asarray(sampled_fermat_potentials_wpl)
 
-    def fermat_potential_arrays_substructure(params_dist_WoS,params_dist_WS,y_test,x_im_test,y_im_test):
+    def fermat_potential_arrays_substructure(params_dist_WoS,params_dist_WS,y_test,x_im_test_WoS,x_im_test_WS,y_im_test_WoS,y_im_test_WS):
         sampled_fermat_potentials_WoS = []
         sampled_fermat_potentials_WS = []
         
         for lens_params in params_dist_WoS:
-            sampled_fermat_potentials_WoS.append(fermat.fermat_potential_at_image_positions(lens_params, x_im_test, y_im_test))
+            sampled_fermat_potentials_WoS.append(fermat.fermat_potential_at_image_positions(lens_params, x_im_test_WoS, y_im_test_WoS))
         for lens_params in params_dist_WS:
-            sampled_fermat_potentials_WS.append(fermat.fermat_potential_at_image_positions(lens_params, x_im_test, y_im_test))
+            sampled_fermat_potentials_WS.append(fermat.fermat_potential_at_image_positions(lens_params, x_im_test_WS, y_im_test_WS))
     
         sampled_fermat_potentials_WoS = np.asarray(sampled_fermat_potentials_WoS)
         sampled_fermat_potentials_WS = np.asarray(sampled_fermat_potentials_WS)
@@ -236,21 +238,29 @@ class fermat:
         abs_max_loc = int(abs_max_loc[0])
 
         return(sample_wop_arr,sample_wp_arr,sample_wpl_arr,truth_arr,abs_max_loc)
-    def largest_truth_value_substructure(shape,params_dist_WoS,params_dist_WS,y_test,x_im_test,y_im_test,truth_fermat_potentials):
-        truth_arr = []
-        sample_WoS_arr = []
-        sample_WS_arr = []
-        sampled_fermat_potentials_WoS,sampled_fermat_potentials_WS = fermat.fermat_potential_arrays_substructure(
-            params_dist_WoS,params_dist_WS,y_test,x_im_test,y_im_test)
+    def largest_truth_value_substructure(shape,params_dist_WoS,params_dist_WS,y_test_WoS,x_im_test_WoS,x_im_test_WS,y_im_test_WoS,y_im_test_WS,
+            truth_fermat_potentials_WoS, truth_fermat_potentials_WS):
+        truth_arr_WoS = []
+        truth_arr_WS = []
+        sample_arr_WoS = []
+        sample_arr_WS = []
+        
+        sampled_fermat_potentials_WoS, sampled_fermat_potentials_WS = fermat.fermat_potential_arrays_substructure(
+            params_dist_WoS,params_dist_WS,y_test_WoS,x_im_test_WoS,x_im_test_WS,y_im_test_WoS,y_im_test_WS)
         
         for j in range(0,shape):
-            truth_arr.append(truth_fermat_potentials[0]-truth_fermat_potentials[j+1])
-            sample_WoS_arr.append(sampled_fermat_potentials_WoS[:,0]-sampled_fermat_potentials_WoS[:,j+1])
-            sample_WS_arr.append(sampled_fermat_potentials_WS[:,0]-sampled_fermat_potentials_WS[:,j+1])
+            truth_arr_WoS.append(truth_fermat_potentials_WoS[0]-truth_fermat_potentials_WoS[j+1])
+            truth_arr_WS.append(truth_fermat_potentials_WS[0]-truth_fermat_potentials_WS[j+1])
+            sample_arr_WoS.append(sampled_fermat_potentials_WoS[:,0]-sampled_fermat_potentials_WoS[:,j+1])
+            sample_arr_WS.append(sampled_fermat_potentials_WS[:,0]-sampled_fermat_potentials_WS[:,j+1])
             
-        truth_arr = np.array(truth_arr)
-        abs_max = max(max(truth_arr), min(truth_arr), key=abs)
-        abs_max_loc =  np.where(truth_arr==abs_max)
-        abs_max_loc = int(abs_max_loc[0])
+        truth_arr_WoS = np.array(truth_arr_WoS)
+        truth_arr_WS = np.array(truth_arr_WS)
+        abs_max_WoS = max(max(truth_arr_WoS), min(truth_arr_WoS), key=abs)
+        abs_max_loc_WoS =  np.where(truth_arr_WoS==abs_max_WoS)
+        abs_max_loc_WoS = int(abs_max_loc_WoS[0])
+        abs_max_WS = max(max(truth_arr_WS), min(truth_arr_WS), key=abs)
+        abs_max_loc_WS =  np.where(truth_arr_WS==abs_max_WS)
+        abs_max_loc_WS = int(abs_max_loc_WS[0])
 
-        return(sample_WoS_arr,sample_WS_arr,truth_arr,abs_max_loc)
+        return(sample_arr_WoS,sample_arr_WS,truth_arr_WoS,truth_arr_WS,abs_max_loc_WoS,abs_max_loc_WS)
