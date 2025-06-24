@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import paltas.Sampling.distributions as dist
-from paltas.MainDeflector.perturbers import Perturber
+from paltas.MainDeflector.perturbers import MainDeflectorWithPerturber
 from paltas.Sources.sersic import SingleSersicSource
 from paltas.Sources.sersic import SersicPerturber
 from paltas.PointSource.single_point_source import SinglePointSource
@@ -28,7 +28,7 @@ cosmo = get_cosmology(cosmology_params)
 
 config_dict = {
 	'main_deflector':{
-		'class': Perturber,
+		'class': MainDeflectorWithPerturber,
 		'parameters':{
 			'z_lens':0.500,
 			'gamma': 1.9156268331,
