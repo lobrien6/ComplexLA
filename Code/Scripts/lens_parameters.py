@@ -1,24 +1,19 @@
 import numpy as np
 from scipy.stats import norm, truncnorm
 import paltas.Sampling.distributions as dist
-import pickle
-import random
 
 # load in a PSF kernel
 from astropy.io import fits
-from lenstronomy.Util import kernel_util
 
 psf_fits_file = '/Users/Logan/AppData/Local/Programs/Python/Python312/Lib/site-packages/paltas/datasets/hst_psf/STDPBF_WFC3UV_F814W.fits'
 
-def perturberparameters(sample_num,module_path):
+def perturberparameters(sample_num):
     """ Generates all of the needed paramaters for each lens
 
     Parameters
     ----------
     sample_num : int
         Number of mock sample lenses.
-    module_path : str
-        File path for the main directory.
 
     Returns
     -------
@@ -41,7 +36,7 @@ def perturberparameters(sample_num,module_path):
     weights = np.random.uniform(size=np.shape(normalized_psfs)[0])
     weights /= np.sum(weights)
     weighted_sum = np.sum(weights.reshape(len(weights),1,1) * normalized_psfs,axis=0)
-    np.save(module_path+'/Files/weighted_sum.npy', weighted_sum)
+    np.save('../Files/weighted_sum.npy', weighted_sum)
 
     #Defining parameters
     full_dict = []
@@ -78,13 +73,14 @@ def perturberparameters(sample_num,module_path):
         'z_lens_light': cross_object_4[1],
     	'mag_app_light': truncnorm(-3./2.,3./2.,loc=20,scale=2.).rvs(),
     	'R_sersic_light': truncnorm(-(1./.8),np.inf,loc=1.0,scale=0.8).rvs(),
-    	'n_sersic_light': truncnorm(-1.25,np.inf,loc=3.,scale=2.).rvs(),
+    	'n_sersic_light': truncnorm(-1.25,np.inf,loc=3.,scale=1.).rvs(),
     	'e1_light': truncnorm(-2.5,2.5,loc=0,scale=0.18).rvs(),
     	'e2_light': truncnorm(-2.5,2.5,loc=0,scale=0.18).rvs(),
     	'z_point_source': cross_object_4[3],
     	'x_point_source': cross_object_3[2],
     	'y_point_source': cross_object_3[3],
     	'mag_app_point_source': truncnorm(-3./2.,3./2.,loc=22.,scale=2.).rvs(),
+        'sigma_sub' : norm(loc=2e-3,scale=1.1e-3).rvs()
     	#'mag_pert': dist.MultipleValues(dist=truncnorm(-1/0.3,np.inf,1,0.3).rvs,num=10)(),
         } 
 
