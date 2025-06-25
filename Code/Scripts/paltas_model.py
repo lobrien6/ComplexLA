@@ -1,14 +1,13 @@
 #from paltas.Configs.config_handler import ConfigHandler
-from paltas.Configs.config_handler_catalog import ConfigHandler
-import matplotlib.pyplot as plt
+from paltas.Configs.config_handler import ConfigHandler
 
-def PaltasModelWoP(path):
-    """ Calls the ConfigHandler script to generate the im and metadata variables from the WoP config file
+def PaltasModel(config_file):
+    """ Calls the ConfigHandler script to generate the im and metadata variables from the config file
 
     Parameters
     ----------
-    path : str
-        File path for the main directory.
+    config_file : str
+        Config file containing lens parameters.
 
     Returns
     -------
@@ -18,50 +17,8 @@ def PaltasModelWoP(path):
         Dictionary of corresponding sampled values.
 
     """
-    perturber_sample = ConfigHandler(path+'Configs/perturber_sample_wop_config.py')
+    perturber_sample = ConfigHandler(config_file)
     im,metadata = perturber_sample.draw_image(new_sample=False)
-
-    return im,metadata
-
-def PaltasModelWP(path):
-    """ Calls the ConfigHandler script to generate the im and metadata variables from the WP config file
-
-    Parameters
-    ----------
-    path : str
-        File path for the main directory.
-
-    Returns
-    -------
-    im : np.array
-        Numpy array of the generated image.
-    metadata : dict
-        Dictionary of corresponding sampled values.
-
-    """
-    test_sample_i = ConfigHandler(path+'Configs/perturber_sample_wp_config.py')
-    im,metadata = test_sample_i.draw_image(new_sample=False)
-
-    return im,metadata
-
-def PaltasModelWPL(path):
-    """ Calls the ConfigHandler script to generate the im and metadata variables from the WPL config file
-
-    Parameters
-    ----------
-    path : str
-        File path for the main directory.
-
-    Returns
-    -------
-    im : np.array
-        Numpy array of the generated image.
-    metadata : dict
-        Dictionary of corresponding sampled values.
-
-    """
-    test_sample_i = ConfigHandler(path+'Configs/perturber_sample_wpl_config.py')
-    im,metadata = test_sample_i.draw_image(new_sample=False)
 
     return im,metadata
 
