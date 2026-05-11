@@ -4,7 +4,7 @@ from deep_lens_modeling import network_predictions
 import time
 
 #define a function for a general case of n situations
-def Predictions(config_file, image_folder, sample_num=1):
+def Predictions(image_folder):
     """ Generates network predictions from images
     
     Parameters
@@ -28,17 +28,6 @@ def Predictions(config_file, image_folder, sample_num=1):
         Predicted precision matrix for the wop, wp and wpl cases.
 
     """
-
-    #Generating the images
-    import subprocess
-    command = f'python /Users/Logan/AppData/Local/Programs/Python/Python312/Lib/site-packages/paltas/paltas/generate.py {config_file} {image_folder} --n {sample_num} --tf_record'
-    print(f"Running: {command}")
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
-
-    print("STDOUT:", result.stdout)
-    print("STDERR:", result.stderr)
-    print("Exit code:", result.returncode)
-    #os.system(f'python /Users/Logan/AppData/Local/Programs/Python/Python312/Lib/site-packages/paltas/paltas/generate.py {config_file} {image_folder} --n {sample_num-1} --tf_record')
 
     # Compute predictions for test sets
     path_to_weights = '../docs/xresnet34_068--14.58.h5'
